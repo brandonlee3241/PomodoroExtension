@@ -1,38 +1,47 @@
+let isExtensionActive = false;
+
 chrome.runtime.onInstalled.addListener(() => {
+    // Initialize the extension state in storage
+    chrome.storage.local.set({ isExtensionActive: false });
+
+    // Set the initial badge text to "OFF"
     chrome.action.setBadgeText({
         text: "OFF",
     });
 });
 
-const extensions = 'https://developer.chrome.com/docs/extensions'
-const webstore = 'https://developer.chrome.com/docs/webstore'
+// Create a listener so that the extension can be toggled on and off 
+// and will persist across browser sessions and page reloads
 
-chrome.action.onClicked.addListener(async (tab) => {
-    if (tab.url.startsWith(extensions) || tab.url.startsWith(webstore)) {
-        // Retrieve the action badge to check if the extension is 'ON' or 'OFF'
-        const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
-        // Next state will always be the opposite
-        const nextState = prevState === 'ON' ? 'OFF' : 'ON'
+// The listener will be called when the extension icon is clicked
+chrome.action.onClicked.addListener(() => {
+    isExtensionActive = !isExtensionActive;
 
-        // Set the action badge to the next state
-        await chrome.action.setBadgeText({
-            tabId: tab.id,
-            text: nextState,
-        });
+    chrome.storage.local.set({ isExtensionActive });
 
-        
-        if (nextState === "ON") {
-            // Insert the CSS file when the user turns the extension on
-            await chrome.scripting.insertCSS({
-              files: ["focus-mode.css"],
-              target: { tabId: tab.id },
+    // Update the badge text to reflect the extension state
+    chrome.action.setBadgeText({
+        text: isExtensionActive ? "ON" : "OFF",
+    });
+});
+
+// Create a listener for when the extension is active and the user navigates to a new page
+// The listener will be called when the tab is updated
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // Check if the extension is active
+    chrome.storage.local.get("isExtensionActive", (data) => {
+        if (data.isExtensionActive) {
+            // If the extension is active, inject the CSS and JS into the page
+            chrome.scripting.insertCSS({
+                target: { tabId },
+                files: ["focus-mode.css"],
             });
-          } else if (nextState === "OFF") {
-            // Remove the CSS file when the user turns the extension off
-            await chrome.scripting.removeCSS({
-              files: ["focus-mode.css"],
-              target: { tabId: tab.id },
-            });
-          }
         }
-      });
+        else {
+            chrome.scripting.removeCSS({
+                target: { tabId },
+                files: ["focus-mode.css"],
+            });
+        }
+    });
+});

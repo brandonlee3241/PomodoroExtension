@@ -20,13 +20,12 @@
             "128": "images/icon-128.png"
         }
     },
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["activeTab", "scripting", "storage", "tabs"],
     "content_scripts":[
         {
             "js": ["scripts/content.js"],
             "matches":[
-            "https://developer.chrome.com/docs/extensions/*",
-            "https://developer.chrome.com/docs/webstore/*"]
+                "<all_urls>"]
         }
     ]
 }
