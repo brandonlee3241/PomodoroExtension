@@ -18,6 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("timer").textContent = request.time;
         }
     });
+
+    // Listen for stop button click
+    document.getElementById("stop").addEventListener("click", function () {
+        // tell background.js it was clicked
+        console.log("stop button clicked");
+        chrome.runtime.sendMessage({ action: "stopTimer" });
+    });
 });
 
 

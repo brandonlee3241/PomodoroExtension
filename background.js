@@ -12,15 +12,13 @@ function startTimer(timeRemaining){
         sendTimeRemaining(timeRemaining);
         if(timeRemaining === 0){
             console.log("timer is done");
-            stopTimer();
+            stopTimer(timeRemaining);
         }
     }, 1000);
 };
 
 function stopTimer(){
     clearInterval(timerId);
-    timeRemaining = 0;
-    sendTimeRemaining(timeRemaining);
 };
 // sends the time remaining to popup.js
 function sendTimeRemaining(timeRemaining){
@@ -37,7 +35,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // start timer
         startTimer(request.duration);
     }
-    else if(request.action === "stop"){
+    else if(request.action === "stopTimer"){
+        console.log("stop timer heard from background");
         stopTimer();
     }
 });
