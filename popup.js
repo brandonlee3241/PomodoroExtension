@@ -3,19 +3,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // set the default duration to 5 seconds
     let default_dur = document.getElementById("timer").value = 25*60;
+    const timerButtons = document.querySelectorAll(".btn-group-container-fluid input[type='radio']");
+    
 
     // Listen for start button click
     document.getElementById("start").addEventListener("click", function () {
-        // tell background.js it was clicked
-
         let duration = document.getElementById("timer").value;
+        timerButtons.forEach(button=>button.setAttribute("disabled",true));
         chrome.runtime.sendMessage({ duration: duration, action: "startTimer" });
-    })
+    });
 
      // Listen for stop button click
      document.getElementById("stop").addEventListener("click", function () {
         console.log("stop button clicked");
-
+        timerButtons.forEach(button=>button.setAttribute("disabled",false));
         chrome.runtime.sendMessage({ action: "stopTimer" });
     });
     
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reset").addEventListener("click", function () {
         console.log("reset button clicked");
         document.getElementById("btnradio1").checked = true;
+        timerButtons.forEach(button=>button.setAttribute("disabled",false));
         chrome.runtime.sendMessage({ action: "resetTimer", duration: default_dur });
         // reset display to default
 
