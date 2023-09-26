@@ -9,8 +9,12 @@ let timeRemaining = 0;
 function startTimer(timeRemaining){
     timerId = setInterval(function(){
         timeRemaining-=0.1;
+   
+        console.log("time remaining: " + timeRemaining + " seconds");
+        let buttonStatus = true;
         // cut off decimal places from the return
         sendTimeRemaining(timeRemaining.toFixed(0));
+        sendButtonStatus(buttonStatus);
         if(timeRemaining === 0){
             console.log("timer is done");
             stopTimer(timeRemaining);
@@ -23,9 +27,11 @@ function stopTimer(){
     clearInterval(timerId);
 };
 
-
+function sendButtonStatus(buttonStatus){
+    chrome.runtime.sendMessage({action: "updateButton", buttonStatus: buttonStatus});
+};
 // sends the time remaining to popup.js to update display
-function sendTimeRemaining(timeRemaining){
+function sendTimeRemaining(timeRemaining, buttonStatus){
     let rawTime = timeRemaining;
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
