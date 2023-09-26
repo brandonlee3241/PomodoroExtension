@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("timer").value = request.rawTime;
             document.getElementById("timer").textContent = request.time;
         }
+        if(request.action === "updateButton"){
+            timerButtons.forEach(button=>button.setAttribute("disabled",request.button));
+        }
     });
 
     
