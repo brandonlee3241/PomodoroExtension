@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Listen for reset button click
     document.getElementById("reset").addEventListener("click", function () {
         console.log("reset button clicked");
-
+        document.getElementById("btnradio1").checked = true;
         chrome.runtime.sendMessage({ action: "resetTimer", duration: default_dur });
         // reset display to default
 
