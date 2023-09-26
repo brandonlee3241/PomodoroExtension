@@ -19,18 +19,22 @@ function startTimer(timeRemaining){
 
 function stopTimer(){
     clearInterval(timerId);
+    console.log("time remaining: " + timeRemaining + " seconds");
 };
-// sends the time remaining to popup.js
+
+// sends the time remaining to popup.js to update display
 function sendTimeRemaining(timeRemaining){
+    let rawTime = timeRemaining;
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
-    chrome.runtime.sendMessage({action: "updateTimer", time: `${minutes}:${seconds.toString().padStart(2, "0")}`});
+    chrome.runtime.sendMessage({action: "updateTimer",rawTime:rawTime, time: `${minutes}:${seconds.toString().padStart(2, "0")}`});
 };
+
 
 
 // listen for message from popup.js to start
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-// listens for action to start or stop timer
+
     if(request.action === "startTimer"){
         // start timer
         startTimer(request.duration);
@@ -38,5 +42,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     else if(request.action === "stopTimer"){
         console.log("stop timer heard from background");
         stopTimer();
+    }
+    else if(request.action === "resetTimer"){
+        console.log("reset timer heard from background");
+        sendTimeRemaining(request.duration);
     }
 });
