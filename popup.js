@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     // set the default duration to 5 seconds
-    let default_dur = document.getElementById("timer").value = 5;
+    let default_dur = document.getElementById("timer").value = 25*60;
 
     // Listen for start button click
     document.getElementById("start").addEventListener("click", function () {
@@ -36,6 +36,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    
+    // Listen for timer buttons to set the timer
+    document.getElementById("btnradio1").addEventListener("click", function () {
+        console.log("25 min button clicked");
+        document.getElementById("timer").value = 25*60;
+        chrome.runtime.sendMessage({ action: "25m",duration: 25*60});
+    });
+    document.getElementById("btnradio2").addEventListener("click", function () {
+        console.log("45 min button clicked");
+        document.getElementById("timer").value = 45*60;
+        chrome.runtime.sendMessage({ action: "45m",duration: 45*60});
+    });
+    document.getElementById("btnradio3").addEventListener("click", function () {
+        console.log("60 min button clicked");
+        document.getElementById("timer").value = 60*60;
+        chrome.runtime.sendMessage({ action: "60m",duration: 60*60});
+    });
    
 });
 

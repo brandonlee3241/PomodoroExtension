@@ -18,8 +18,8 @@ function startTimer(timeRemaining){
 };
 
 function stopTimer(){
+    console.log("Clearing interval");
     clearInterval(timerId);
-    console.log("time remaining: " + timeRemaining + " seconds");
 };
 
 // sends the time remaining to popup.js to update display
@@ -45,6 +45,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
     else if(request.action === "resetTimer"){
         console.log("reset timer heard from background");
+        sendTimeRemaining(request.duration);
+    }
+
+    // cases for timer buttons
+    if(request.action === "25m"){
+        console.log("25 min button clicked");
+        sendTimeRemaining(request.duration);
+    }
+    else if(request.action === "45m"){
+        console.log("45 min button clicked");
+        sendTimeRemaining(request.duration);
+    }
+    else if(request.action === "60m"){
+        console.log("60 min button clicked");
         sendTimeRemaining(request.duration);
     }
 });
