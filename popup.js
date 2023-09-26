@@ -9,24 +9,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // Listen for start button click
     document.getElementById("start").addEventListener("click", function () {
         let duration = document.getElementById("timer").value;
-        timerButtons.forEach(button=>button.setAttribute("disabled",true));
+        document.getElementById("start").setAttribute("disabled","true");
+        timerButtons.forEach(button=>button.setAttribute("disabled","true"));
         chrome.runtime.sendMessage({ duration: duration, action: "startTimer" });
     });
 
      // Listen for stop button click
      document.getElementById("stop").addEventListener("click", function () {
-        console.log("stop button clicked");
-        timerButtons.forEach(button=>button.setAttribute("disabled",false));
+        document.getElementById("start").removeAttribute("disabled");
+        timerButtons.forEach(button=>button.removeAttribute("disabled"));
         chrome.runtime.sendMessage({ action: "stopTimer" });
     });
     
     // Listen for reset button click
     document.getElementById("reset").addEventListener("click", function () {
-        console.log("reset button clicked");
+     
         document.getElementById("btnradio1").checked = true;
-        timerButtons.forEach(button=>button.setAttribute("disabled",false));
+        document.getElementById("start").removeAttribute("disabled");
+        timerButtons.forEach(button=>button.removeAttribute("disabled"));
         chrome.runtime.sendMessage({ action: "resetTimer", duration: default_dur });
-        // reset display to default
+
 
     });
 
@@ -36,9 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("timer").value = request.rawTime;
             document.getElementById("timer").textContent = request.time;
         }
-        if(request.action === "updateButton"){
-            timerButtons.forEach(button=>button.setAttribute("disabled",request.button));
-        }
+    
     });
 
     

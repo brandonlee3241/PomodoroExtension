@@ -4,34 +4,28 @@
 // start the timer in the background, continuously feeding the popup.js with the time remaining
 let timerId;
 let timeRemaining = 0;
-let buttonStatus = false;
+
 
 function startTimer(timeRemaining){
     timerId = setInterval(function(){
-        timeRemaining--;
-        console.log("time remaining: " + timeRemaining + " seconds");
-        let buttonStatus = true;
-        sendTimeRemaining(timeRemaining);
-        sendButtonStatus(buttonStatus);
+        timeRemaining-=0.1;
+        // cut off decimal places from the return
+        sendTimeRemaining(timeRemaining.toFixed(0));
         if(timeRemaining === 0){
             console.log("timer is done");
             stopTimer(timeRemaining);
         }
-    }, 1000);
+    }, 100);
 };
 
 function stopTimer(){
     console.log("Clearing interval");
-    let buttonStatus = false;
-    sendButtonStatus(buttonStatus);
     clearInterval(timerId);
 };
 
-function sendButtonStatus(buttonStatus){
-    chrome.runtime.sendMessage({action: "updateButton", buttonStatus: buttonStatus});
-};
+
 // sends the time remaining to popup.js to update display
-function sendTimeRemaining(timeRemaining, buttonStatus){
+function sendTimeRemaining(timeRemaining){
     let rawTime = timeRemaining;
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
