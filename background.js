@@ -15,9 +15,9 @@ function startTimer(timeRemaining){
         // cut off decimal places from the return
         sendTimeRemaining(timeRemaining.toFixed(0));
         sendButtonStatus(buttonStatus);
-        if(timeRemaining === 0){
+        if(timeRemaining <= 0){
             console.log("timer is done");
-            stopTimer(timeRemaining);
+            stopTimer();
         }
     }, 100);
 };
